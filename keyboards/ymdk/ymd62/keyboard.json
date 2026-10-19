@@ -51,10 +51,14 @@
             "riverflow": true,
             "starlight": true,
             "starlight_dual_hue": true,
-            "starlight_dual_sat": true
+            "starlight_dual_sat": true,
+            "layered_effect": true
         },
         "default": {
-            "animation": "rainbow_moving_chevron"
+            "animation": "layered_effect",
+            "hue": 246,
+            "val": 89,
+            "sat": 26
         },
         "driver": "ws2812",
         "layout": [

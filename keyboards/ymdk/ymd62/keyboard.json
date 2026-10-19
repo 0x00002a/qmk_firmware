@@ -130,6 +130,11 @@
             {"x": 90, "y": 60, "flags": 2},
             {"x": 60, "y": 60, "flags": 2}
         ],
+        "default": {
+            "animation": "rainbow_pinwheels",
+            "speed": 30,
+            "val": 50
+        },
         "max_brightness": 128
     },
     "url": "https://ymdkey.com/products/ymd62-iso-rgb-hot-swap-pcb-fully-programmable-support-via-vial",

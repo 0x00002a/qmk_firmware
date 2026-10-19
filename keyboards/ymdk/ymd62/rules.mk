@@ -1,3 +1,4 @@
 # Configure for 128K flash
 MCU_LDSCRIPT = STM32F103xB
 RGB_MATRIX_CUSTOM_USER = yes
+TAP_DANCE_ENABLE = yes

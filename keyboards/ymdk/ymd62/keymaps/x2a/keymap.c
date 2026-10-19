@@ -23,7 +23,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 static const HSV layer_colours[] = {
     {HSV_AZURE},
-    {HSV_ORANGE},
+    {HSV_AZURE},
 };
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {

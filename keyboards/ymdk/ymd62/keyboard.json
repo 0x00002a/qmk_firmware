@@ -53,12 +53,6 @@
             "starlight_dual_hue": true,
             "starlight_dual_sat": true
         },
-        "default": {
-            "animation": "riverflow",
-            "hue": 246,
-            "val": 89,
-            "sat": 26
-        },
         "driver": "ws2812",
         "layout": [
             {"matrix": [0, 0], "x": 1, "y": 1, "flags": 4},

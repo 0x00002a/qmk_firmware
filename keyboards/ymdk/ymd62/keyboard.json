@@ -51,11 +51,10 @@
             "riverflow": true,
             "starlight": true,
             "starlight_dual_hue": true,
-            "starlight_dual_sat": true,
-            "layered_effect": true
+            "starlight_dual_sat": true
         },
         "default": {
-            "animation": "layered_effect",
+            "animation": "riverflow",
             "hue": 246,
             "val": 89,
             "sat": 26

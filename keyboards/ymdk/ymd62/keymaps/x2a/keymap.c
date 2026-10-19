@@ -1,6 +1,9 @@
 // Copyright 2024 Richard Dawe (@richdawe)
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include QMK_KEYBOARD_H
+#include <lib/lib8tion/lib8tion.h>
+
+#include <stdint.h>
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [0] = LAYOUT_60_iso( /* Base */
@@ -18,8 +21,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_VOLU,  KC_VOLD,  KC_MUTE,                                KC_TRNS,                                KC_TRNS,  TO(0),  KC_TRNS,  KC_TRNS)
 };
 
+static const HSV layer_colours[] = {
+    {HSV_AZURE},
+    {HSV_ORANGE},
+};
+
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     uint8_t layer = get_highest_layer(layer_state | default_layer_state);
     if (layer == 0) return false;            // leave base layer alone
-    ... same loop, no RGB_MATRIX_USE_LIMITS, return false ...
+
+    if (layer >= sizeof(layer_colours)) {
+        layer = 0;
+    }
+    HSV hsv = layer_colours[layer];
+
+    RGB rgb = hsv_to_rgb(hsv);
+
+    // select only the function keys, so not escape or backspace
+    for (uint8_t c = 1; c < (MATRIX_COLS - 1); ++c) {
+        uint8_t led = g_led_config.matrix_co[0][c];
+        if (led == NO_LED) {
+            continue;
+        }
+        rgb_matrix_set_color(led, rgb.r, rgb.g, rgb.b);
+    }
+    return false;
+
 }

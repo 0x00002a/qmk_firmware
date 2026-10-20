@@ -31,3 +31,15 @@ Diagnostics:
             invalid_asm_value_for_constraint,
             anyx86_interrupt_attribute,
         ]
+
+---
+If:
+  PathMatch: .*\.inc
+CompileFlags:
+  Add:
+    - -xc
+    - -includergb_matrix.h
+    - -includelib/lib8tion/lib8tion.h
+    - -DRGB_MATRIX_CUSTOM_EFFECT_IMPLS
+    - -DRGB_MATRIX_EFFECT(name)=
+    - -Wno-unused-function

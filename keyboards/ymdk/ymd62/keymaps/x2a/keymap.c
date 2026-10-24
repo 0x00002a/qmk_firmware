@@ -5,8 +5,7 @@
 
 #include <stdint.h>
 
-
-void td_layer_up_fn(tap_dance_state_t* state, void* user_data) {
+void td_layer_up_fn(tap_dance_state_t *state, void *user_data) {
     if (state->count == 1 && !state->pressed) {
         set_oneshot_layer(1, ONESHOT_START);
         clear_oneshot_layer_state(ONESHOT_PRESSED);
@@ -25,13 +24,13 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_LAYER_UP] = ACTION_TAP_DANCE_FN(td_layer_up_fn),
 };
 
-
+// clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [0] = LAYOUT_60_iso( /* Base */
     QK_GESC,  KC_1,     KC_2,     KC_3,  KC_4,  KC_5,  KC_6,    KC_7,  KC_8,  KC_9,     KC_0,     KC_MINS,  KC_EQL,  KC_BSPC,
     KC_TAB,   KC_Q,     KC_W,     KC_E,  KC_R,  KC_T,  KC_Y,    KC_U,  KC_I,  KC_O,     KC_P,     KC_LBRC,  KC_RBRC,
     KC_CAPS,  KC_A,     KC_S,     KC_D,  KC_F,  KC_G,  KC_H,    KC_J,  KC_K,  KC_L,     KC_SCLN,  KC_QUOT,  KC_NUHS, KC_ENT,
-    OSM(MOD_LALT),  KC_NUBS,  KC_Z,     KC_X,  KC_C,  KC_V,  KC_B,    KC_N,  KC_M,  KC_COMM,  KC_DOT,   KC_SLSH,           KC_RSFT,
+    OSM(MOD_LSFT),  KC_NUBS,  KC_Z,     KC_X,  KC_C,  KC_V,  KC_B,    KC_N,  KC_M,  KC_COMM,  KC_DOT,   KC_SLSH,           KC_RSFT,
     KC_LCTL,  KC_LGUI,  KC_LALT,                       KC_SPC,                                     TD(TD_LAYER_UP), KC_LEFT,  KC_UP,  KC_RIGHT),
 
 [1] = LAYOUT_60_iso( /* FN */
@@ -46,6 +45,7 @@ static const HSV layer_colours[] = {
     {HSV_AZURE},
     {HSV_AZURE},
 };
+// clang-format on
 
 void ctrl_layer_key_highlights(uint8_t led_min, uint8_t led_max) {
     uint8_t layer = get_highest_layer(layer_state | default_layer_state);
@@ -56,19 +56,30 @@ void ctrl_layer_key_highlights(uint8_t led_min, uint8_t led_max) {
         layer = 0;
     }
     HSV hsv = layer_colours[layer];
-    hsv.v = rgb_matrix_config.hsv.v;
+    hsv.v   = rgb_matrix_config.hsv.v;
 
     RGB rgb = hsv_to_rgb(hsv);
 
     // select only the function keys, so not escape or backspace
+    if (get_highest_layer(layer_state) > 0) {
+        uint8_t layer = get_highest_layer(layer_state);
+
+        for (uint8_t row = 0; row < MATRIX_ROWS; ++row) {
+            for (uint8_t col = 0; col < MATRIX_COLS; ++col) {
+                uint8_t index = g_led_config.matrix_co[row][col];
+
+                if (index >= led_min && index < led_max && index != NO_LED && keymap_key_to_keycode(layer, (keypos_t){col, row}) > KC_TRNS) {
+                    rgb_matrix_set_color(index, rgb.r, rgb.g, rgb.b);
+                }
+            }
+        }
+    }
     for (uint8_t c = 1; c < (MATRIX_COLS - 1); ++c) {
         uint8_t led = g_led_config.matrix_co[0][c];
         if (led == NO_LED) {
             continue;
         }
-        rgb_matrix_set_color(led, rgb.r, rgb.g, rgb.b);
     }
-
 }
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
@@ -79,11 +90,15 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     } else {
         rgb_matrix_set_color(capslock_led, 0, 0, 0);
     }
+    const uint8_t shift_led = g_led_config.matrix_co[3][0];
+    if ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT) {
+        uprintf("SHIFT SEL");
+        rgb_matrix_set_color(shift_led, RGB_AZURE);
+    } else {
+        rgb_matrix_set_color(shift_led, 0, 0, 0);
+    }
 
     ctrl_layer_key_highlights(led_min, led_max);
 
-
-
     return false;
-
 }

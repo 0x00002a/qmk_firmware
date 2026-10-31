@@ -12,4 +12,4 @@
 
 //#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_CUSTOM_multi_colour_wave
 //#define RGB_MATRIX_DEFAULT_SPD 30
-#define TAPPING_TERM 500
+#define TAPPING_TERM 200
